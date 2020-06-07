@@ -48,12 +48,17 @@ def login():
     if request.method == "GET":
         return render_template('login.html')
     else:
-      session['username'] = request.form['username']
       u = request.form['username']
       p = request.form['password']
-      accuracy_checker = db.execute("SELECT username, password FROM users WHERE username = :username AND password = crypt(:password, password)", {"username": u, "password": p}).fetchall()
+      accuracy_checker = db.execute("SELECT * FROM users WHERE username = :username AND password = crypt(:password, password)", {"username": u, "password": p}).fetchall()
 
       if accuracy_checker:
+          session["user_id"] = accuracy_checker[0]["user_id"]
           return redirect(url_for('index'))
       else:
           return render_template("error.html", message="Sorry, that information is inaccurate.")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
