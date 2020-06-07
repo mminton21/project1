@@ -33,10 +33,15 @@ def register():
         u = request.form['username']
         p = request.form['password']
 
+        username_checker = db.execute("SELECT username FROM users WHERE username = :username", {"username": u}).fetchall()
+        if username_checker:
+            return render_template("error.html", message="Sorry, that username is already taken.")
+
+
         db.execute("INSERT INTO users (username, password) VALUES (:username, crypt(:password, gen_salt('bf', 8)))", {"username": u, "password": p})
         db.commit()
 
-        return render_template('register.html')
+        return render_template('login.html')
 
 @app.route("/login", methods=['GET','POST'])
 def login():
