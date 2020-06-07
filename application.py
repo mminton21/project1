@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, request, render_template
+from flask import Flask, session, request, render_template, redirect, url_for
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -23,7 +23,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    return "Project 1: TODO"
+    return render_template("index.html")
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -54,6 +54,6 @@ def login():
       accuracy_checker = db.execute("SELECT username, password FROM users WHERE username = :username AND password = crypt(:password, password)", {"username": u, "password": p}).fetchall()
 
       if accuracy_checker:
-          return render_template('login.html', accuracy_checker = accuracy_checker)
+          return redirect(url_for('index'))
       else:
           return render_template("error.html", message="Sorry, that information is inaccurate.")
