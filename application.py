@@ -29,3 +29,8 @@ def index():
 def register():
     if request.method == "GET":
         return render_template('register.html')
+
+@app.route("/login", methods=['GET','POST'])
+def login():
+    if request.method == "GET":
+        return render_template('login.html')
