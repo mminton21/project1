@@ -28,9 +28,20 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == "GET":
+        return render_template('register.html', foo='42')
+    else:
+        u = request.form['username']
+        p = request.form['password']
+
+        db.execute("INSERT INTO users (username, password) VALUES (:username, crypt(:password, gen_salt('bf', 8)))", {"username": u, "password": p})
+        db.commit()
+
         return render_template('register.html')
 
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == "GET":
         return render_template('login.html')
+    else:
+      session['username'] = request.form['username']
+      return redirect(url_for('index'))
