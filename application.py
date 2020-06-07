@@ -28,7 +28,7 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == "GET":
-        return render_template('register.html', foo='42')
+        return render_template('register.html')
     else:
         u = request.form['username']
         p = request.form['password']
@@ -49,4 +49,11 @@ def login():
         return render_template('login.html')
     else:
       session['username'] = request.form['username']
-      return redirect(url_for('index'))
+      u = request.form['username']
+      p = request.form['password']
+      accuracy_checker = db.execute("SELECT username, password FROM users WHERE username = :username AND password = crypt(:password, password)", {"username": u, "password": p}).fetchall()
+
+      if accuracy_checker:
+          return render_template('login.html', accuracy_checker = accuracy_checker)
+      else:
+          return render_template("error.html", message="Sorry, that information is inaccurate.")
