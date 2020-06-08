@@ -6,16 +6,20 @@
 <h2>Search</h2>
 
 <form action="/" method='POST'>
-    <label for="squery">Search Query:</label>
-    <input type="text" id="squery" name="squery">
-    <input type="submit">
-  </form>
-  
   <label for="squery_type">Search Query Type:</label>
   <select name="squery_type">
     <option value="isbn">ISBN</option>
     <option value="title">Title</option>
     <option value="author">Author</option>
   </select>
+  <br>
+  <label for="squery">Search Query:</label>
+  <input type="text" id="squery" name="squery">
+  <input type="submit">
+
+</form>
+
+{{ query}}
+{{ selector }}
 
 {% endblock %}

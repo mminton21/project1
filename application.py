@@ -26,7 +26,10 @@ def index():
     if request.method == 'GET':
         return render_template("index.html")
     else:
-        
+        query = request.form['squery']
+        selector = request.form.get('squery_type')
+        return render_template('index.html', query=query, selector=selector)
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
