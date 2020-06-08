@@ -40,6 +40,11 @@ def index():
         if selector == 'title':
             search = db.execute("SELECT * FROM books WHERE title LIKE :title", {"title": query}).fetchall()
 
+        slen = len(search)
+        if slen == 0:
+            return render_template("error.html", message="Sorry, that search yielded no results.")
+
+
         return render_template('index.html', search=search)
 
 
