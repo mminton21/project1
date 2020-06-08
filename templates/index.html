@@ -16,10 +16,10 @@
   <label for="squery">Search Query:</label>
   <input type="text" id="squery" name="squery">
   <input type="submit">
-
 </form>
 
-{{ query}}
-{{ selector }}
+{% for s in search %}
+    {{ s }}
+{% endfor %}
 
 {% endblock %}

@@ -28,7 +28,18 @@ def index():
     else:
         query = request.form['squery']
         selector = request.form.get('squery_type')
-        return render_template('index.html', query=query, selector=selector)
+        selector = str(selector)
+
+        if selector == 'isbn':
+            search = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": query}).fetchall()
+ 
+        if selector == 'author':
+            search = db.execute("SELECT * FROM books WHERE author = :author", {"author": query}).fetchall()
+
+        if selector == 'title':
+            search = db.execute("SELECT * FROM books WHERE title = :title", {"title": query}).fetchall()
+
+        return render_template('index.html', search=search)
 
 
 @app.route("/register", methods=['GET', 'POST'])
