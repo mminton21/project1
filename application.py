@@ -85,3 +85,8 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+@app.route("/<isbn>")
+def book_isbn(isbn):
+    isbn_f = db.execute("SELECT isbn FROM books WHERE isbn is :isbn", {"isbn": isbn}).fetchall()
+    
