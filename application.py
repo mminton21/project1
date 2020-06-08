@@ -29,15 +29,16 @@ def index():
         query = request.form['squery']
         selector = request.form.get('squery_type')
         selector = str(selector)
+        query = query + "%"
 
         if selector == 'isbn':
-            search = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": query}).fetchall()
+            search = db.execute("SELECT * FROM books WHERE isbn LIKE :isbn", {"isbn": query}).fetchall()
  
         if selector == 'author':
-            search = db.execute("SELECT * FROM books WHERE author = :author", {"author": query}).fetchall()
+            search = db.execute("SELECT * FROM books WHERE author LIKE :author", {"author": query}).fetchall()
 
         if selector == 'title':
-            search = db.execute("SELECT * FROM books WHERE title = :title", {"title": query}).fetchall()
+            search = db.execute("SELECT * FROM books WHERE title LIKE :title", {"title": query}).fetchall()
 
         return render_template('index.html', search=search)
 
