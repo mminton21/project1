@@ -14,4 +14,19 @@
     {% endfor %}
 </ul>
 
+<form action="/thanks" method='POST'>
+    <label for="book_rating">Your Rating:</label>
+    <select name="book_rating">
+      <option value="5">5</option>
+      <option value="4">4</option>
+      <option value="3">3</option>
+      <option value="2">2</option>
+      <option value="1">1</option>
+    </select>
+    <br>
+    <textarea name="comment" form="usrform">Enter text here...</textarea>
+    <br>
+    <input type="submit">
+</form>
+
 {% endblock %}
