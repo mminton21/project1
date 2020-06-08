@@ -88,6 +88,6 @@ def logout():
 
 @app.route("/<isbn>")
 def book_isbn(isbn):
-    #isbn_f = db.execute("SELECT * FROM books WHERE isbn is :isbn", {"isbn": isbn}).fetchall()
-    return render_template('book.html')
+    isbn_f = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
+    return render_template('book.html', isbn_f = isbn_f)
 

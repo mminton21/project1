@@ -3,4 +3,15 @@
 {% block title %}Book{% endblock %}
 {% block content %}
 
+<ul>
+    {% for v in isbn_f %}
+    <h2>{{v[1]}}</h2>
+    <br>
+    <li>{{v[0]}}</li>
+    <li>{{v[1]}}</li>
+    <li>{{v[2]}}</li>
+    <li>{{v[3]}}</li>
+    {% endfor %}
+</ul>
+
 {% endblock %}
