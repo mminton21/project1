@@ -98,7 +98,8 @@ def book_isbn(isbn):
     
     if request.method == 'GET':
         isbn_f = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
-        return render_template('book.html', isbn_f = isbn_f)
+        reviews = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
+        return render_template('book.html', isbn_f = isbn_f, reviews=reviews)
 
 @app.route("/thanks", methods=['GET', 'POST'])
 def thanks():

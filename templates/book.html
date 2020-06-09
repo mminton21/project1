@@ -28,8 +28,20 @@
     <br>
     <input type="submit">
 </form>
+<br>
+<h2>Available Reviews</h2>
+<table>
+  <tr>
+    <th>Rating</th>
+    <th>Comment</th>
+  </tr>
+  {% for r in reviews %}
+  <tr>
+    <td>{{ r[0] }}</td>
+    <td>{{ r[1] }}</td>
+  </tr>
+  {% endfor %}
+</table>
 
-{{ rating}}
-{{ comment }}
 
 {% endblock %}
