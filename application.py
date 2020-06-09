@@ -91,3 +91,7 @@ def book_isbn(isbn):
     isbn_f = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
     return render_template('book.html', isbn_f = isbn_f)
 
+@app.route("/thanks", methods=['POST'])
+def thanks():
+    return "Thanks for your submission!"
+
