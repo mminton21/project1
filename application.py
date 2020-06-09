@@ -86,12 +86,19 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route("/<isbn>")
+@app.route("/<isbn>", methods=['GET', 'POST'])
 def book_isbn(isbn):
     isbn_f = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
-    return render_template('book.html', isbn_f = isbn_f)
+    
+    if request.method == 'GET':
+        return render_template('book.html', isbn_f = isbn_f)
+    else:
+        rating = request.form.get('book_rating')
+        comment = request.form['text']
+        
+        db.execute("INSERT INTO reviews (rating, comment, isbn, user_id) VALUES (:rating, :comment, :isbn, :user_id)", {"rating": rating, "comment": comment, "isbn": isbnex, "user_id": session["user_id"]})
+        db.commit()
+        return render_template('thanks.html', message='Thanks for your submission!')
 
-@app.route("/thanks", methods=['POST'])
-def thanks():
-    return "Thanks for your submission!"
+
 
