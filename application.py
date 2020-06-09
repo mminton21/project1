@@ -5,6 +5,8 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+import requests
+
 app = Flask(__name__)
 
 # Check for environment variable
@@ -104,7 +106,14 @@ def book_isbn(isbn):
     if request.method == 'GET':
         isbn_f = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
         reviews = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
-        return render_template('book.html', isbn_f = isbn_f, reviews=reviews)
+
+        res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "BrqUT8gVYRCu6yqFUDFHvA", "isbns": isbn})
+        content = res.json()
+        
+        av_rating = content["books"][0]['average_rating']
+        count = content["books"][0]['work_ratings_count']
+
+        return render_template('book.html', isbn_f = isbn_f, reviews=reviews, content=content, av_rating=av_rating, count=count)
 
 @app.route("/thanks", methods=['GET', 'POST'])
 def thanks():
