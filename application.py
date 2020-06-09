@@ -96,9 +96,13 @@ def book_isbn(isbn):
         rating = request.form.get('book_rating')
         comment = request.form['text']
         
-        db.execute("INSERT INTO reviews (rating, comment, isbn, user_id) VALUES (:rating, :comment, :isbn, :user_id)", {"rating": rating, "comment": comment, "isbn": isbnex, "user_id": session["user_id"]})
+        db.execute("INSERT INTO reviews (rating, comment, isbn, user_id) VALUES (:rating, :comment, :isbn, :user_id)", {"rating": rating, "comment": comment, "isbn": isbn, "user_id": session["user_id"]})
         db.commit()
-        return render_template('thanks.html', message='Thanks for your submission!')
+        return render_template(url_for('book_isbn'), isbn=isbn)
+
+@app.route("/thanks", methods=['GET', 'POST'])
+def thanks():
+    return render_template('thanks.html', message="Thanks for submitting!")
 
 
 
