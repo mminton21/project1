@@ -91,6 +91,11 @@ def book_isbn(isbn):
     if request.method == 'POST':
         rating = request.form.get('book_rating')
         comment = request.form['text']
+        user_id = str(session['user_id'])
+
+        elig_checker = db.execute("SELECT * FROM reviews WHERE user_id = :user_id AND isbn = :isbn", {"user_id": user_id, "isbn": isbn})
+        if elig_checker.rowcount >= 1:
+            return render_template('error.html', message="Sorry, only one review per person per book.")
 
         db.execute("INSERT INTO reviews (rating, comment, isbn, user_id) VALUES (:rating, :comment, :isbn, :user_id)", {"rating": rating, "comment": comment, "isbn": isbn, "user_id": session["user_id"]})
         db.commit()
