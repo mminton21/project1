@@ -134,9 +134,19 @@ def api(isbn):
     total = 0
     rate = []
     for rating in avg:
-        rate.append(rating)
+        rate.append(rating[0])
 
-    return render_template('temp.html', listtojson=listtojson, rate=rate)
+    for r in rate:
+        total += int(r)
+        counter += 1
+
+    if counter == 0:
+        rating_average = "N/A"
+    else:
+        rating_average = float(total) / counter
+        rating_average = format(rating_average, '.2f')
+
+    return render_template('temp.html', listtojson=listtojson, rating_average=rating_average)
 
 
 
