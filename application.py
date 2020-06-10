@@ -122,47 +122,47 @@ def thanks():
 @app.route("/api/<isbn>")
 def api(isbn):
 
-    check_isbn = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
-    if check_isbn is None:
-        return jsonify({"error: Invalid isbn"}), 404
-
     #Get Info
     listtojson = db.execute("SELECT title, author, year, books.isbn, COUNT(reviews.rating) FROM books INNER JOIN reviews ON books.isbn = reviews.isbn WHERE books.isbn = :isbn GROUP by title, author, year, books.isbn", {"isbn": isbn}).fetchall()
     
-    ljson = listtojson[0]
-    title = ljson[0]
-    author = ljson[1]
-    year = ljson[2]
-    isbn_json = ljson[3]
-    review_count= ljson[4]
+    if listtojson:
+
+        ljson = listtojson[0]
+        title = ljson[0]
+        author = ljson[1]
+        year = ljson[2]
+        isbn_json = ljson[3]
+        review_count= ljson[4]
     
-    avg = db.execute("SELECT rating FROM reviews WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
+        avg = db.execute("SELECT rating FROM reviews WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
 
-    counter = 0
-    total = 0
-    rate = []
-    for rating in avg:
-        rate.append(rating[0])
+        counter = 0
+        total = 0
+        rate = []
+        for rating in avg:
+            rate.append(rating[0])
 
-    for r in rate:
-        total += int(r)
-        counter += 1
+        for r in rate:
+            total += int(r)
+            counter += 1
 
-    if counter == 0:
-        rating_average = "N/A"
+        if counter == 0:
+            rating_average = "N/A"
+        else:
+            rating_average = float(total) / counter
+            rating_average = format(rating_average, '.2f')
+
+        return jsonify({
+            "title": title,
+            "author": author,
+            "year": year,
+            "isbn": isbn_json,
+            "rating_average": rating_average,
+            "review_count": review_count
+        })
+
     else:
-        rating_average = float(total) / counter
-        rating_average = format(rating_average, '.2f')
-
-    return jsonify({
-        "title": title,
-        "author": author,
-        "year": year,
-        "isbn": isbn_json,
-        "rating_average": rating_average,
-        "review_count": review_count
-    })
-
+        return jsonify({"error": "Invalid isbn"}), 404
 
 
 
