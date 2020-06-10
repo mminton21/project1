@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, request, render_template, redirect, url_for
+from flask import Flask, session, request, render_template, redirect, url_for, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -118,6 +118,26 @@ def book_isbn(isbn):
 @app.route("/thanks", methods=['GET', 'POST'])
 def thanks():
     return render_template('thanks.html', message="Thanks for submitting!")
+
+@app.route("/api/<isbn>")
+def api(isbn):
+
+    check_isbn = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
+    if check_isbn is None:
+        return jsonify({"error: Invalid isbn"}), 404
+
+    #Get Info
+    listtojson = db.execute("SELECT title, author, year, books.isbn, COUNT(reviews.rating) FROM books INNER JOIN reviews ON books.isbn = reviews.isbn WHERE books.isbn = :isbn GROUP by title, author, year, books.isbn", {"isbn": isbn}).fetchall()
+    avg = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
+
+    counter = 0
+    total = 0
+    rate = []
+    for rating in avg:
+        rate.append(rating)
+
+    return render_template('temp.html', listtojson=listtojson, rating=rating)
+
 
 
 
