@@ -128,6 +128,14 @@ def api(isbn):
 
     #Get Info
     listtojson = db.execute("SELECT title, author, year, books.isbn, COUNT(reviews.rating) FROM books INNER JOIN reviews ON books.isbn = reviews.isbn WHERE books.isbn = :isbn GROUP by title, author, year, books.isbn", {"isbn": isbn}).fetchall()
+    
+    ljson = listtojson[0]
+    title = ljson[0]
+    author = ljson[1]
+    year = ljson[2]
+    isbn_json = ljson[3]
+    review_count= ljson[4]
+    
     avg = db.execute("SELECT rating FROM reviews WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
 
     counter = 0
@@ -146,7 +154,14 @@ def api(isbn):
         rating_average = float(total) / counter
         rating_average = format(rating_average, '.2f')
 
-    return render_template('temp.html', listtojson=listtojson, rating_average=rating_average)
+    return jsonify({
+        "title": title,
+        "author": author,
+        "year": year,
+        "isbn": isbn_json,
+        "rating_average": rating_average,
+        "review_count": review_count
+    })
 
 
 
